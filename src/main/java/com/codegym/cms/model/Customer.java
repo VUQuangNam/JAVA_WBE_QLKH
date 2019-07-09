@@ -6,13 +6,27 @@ import javax.persistence.*;
 @Table(name = "customers")
 public class Customer {
 
+
+    @ManyToOne
+    @JoinColumn(name = "province_id")
+    private Province province;
+
+    public Province getProvince() {
+        return province;
+    }
+
+    public void setProvince(Province province) {
+        this.province = province;
+    }
+
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
 
-    public Customer() {}
+    public Customer() {
+    }
 
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;

@@ -1,7 +1,9 @@
 package com.codegym.cms.controller;
 
 import com.codegym.cms.model.Customer;
+import com.codegym.cms.model.Province;
 import com.codegym.cms.service.CustomerService;
+import com.codegym.cms.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,13 @@ import java.util.List;
 
 @Controller
 public class CustomerController {
+    @Autowired
+    private ProvinceService provinceService;
+
+    @ModelAttribute("provinces")
+    public Iterable<Province> provinces() {
+        return provinceService.findAll();
+    }
 
     @Autowired
     private CustomerService customerService;
@@ -37,7 +46,7 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public ModelAndView listCustomer() {
-        List<Customer> customers = customerService.findAll();
+        Iterable<Customer> customers = customerService.findAll();
         ModelAndView modelAndView = new ModelAndView("/customer/list");
         modelAndView.addObject("customers", customers);
         return modelAndView;
@@ -65,7 +74,7 @@ public class CustomerController {
         return modelAndView;
     }
 
-    @GetMapping("/delete-custumer/{id}")
+    @GetMapping("/delete-customer/{id}")
     public ModelAndView showDeleteFrom(@PathVariable Long id) {
         Customer customer = customerService.findById(id);
         if (customer != null) {
@@ -77,8 +86,9 @@ public class CustomerController {
             return modelAndView;
         }
     }
+
     @PostMapping("/delete-customer")
-    public String deleteCustomer(@ModelAttribute("customer") Customer customer){
+    public String deleteCustomer(@ModelAttribute("customer") Customer customer) {
         customerService.remove(customer.getId());
         return "redirect:customers";
     }
